@@ -1,14 +1,17 @@
 import { Component } from '@angular/core';
 import { Conference } from '../../Models/conference';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-confrence-list',
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './confrence-list.html',
   styleUrl: './confrence-list.css',
 })
 export class ConfrenceList {
+  searchItem = '';
+  favoriteList: Conference[] = [];
   confList: Conference[] = [
     {
       id: 1,
@@ -61,4 +64,23 @@ export class ConfrenceList {
       nbLikes: 0,
     },
   ];
+
+  addToFavorite(conf: Conference): void {
+    if (this.favoriteList.includes(conf)) {
+      alert('this conf already exist');
+      return;
+    }
+    this.favoriteList.push(conf);
+  }
+
+  liker(conf: Conference): void {
+    conf.nbLikes++;
+  }
+
+  filtrer(): Conference[] {
+    const recherche = this.searchItem.trim().toLowerCase();
+    return this.confList.filter(
+      (conf) => conf.nbPlaces > 0 && conf.titre.toLowerCase().includes(recherche),
+    );
+  }
 }
