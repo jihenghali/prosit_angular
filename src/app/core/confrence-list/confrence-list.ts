@@ -1,18 +1,19 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { Conference } from '../../Models/conference';
-import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
+import { Card } from '../card/card';
 @Component({
   selector: 'app-confrence-list',
-  imports: [CommonModule, FormsModule],
+  imports: [FormsModule, Card],
   templateUrl: './confrence-list.html',
   styleUrl: './confrence-list.css',
 })
 export class ConfrenceList {
+  x=signal(2);
   searchItem = '';
-  favoriteList: Conference[] = [];
-  confList: Conference[] = [
+  favoriteList=signal<Conference[]>([]);
+  confList=signal<Conference[]>(
+    [
     {
       id: 1,
       titre: 'Angular Workshop',
@@ -63,24 +64,33 @@ export class ConfrenceList {
       category: 'Business',
       nbLikes: 0,
     },
-  ];
+  ]);
 
   addToFavorite(conf: Conference): void {
-    if (this.favoriteList.includes(conf)) {
+    if (this.favoriteList().includes(conf)) {
       alert('this conf already exist');
       return;
     }
-    this.favoriteList.push(conf);
+    this.favoriteList.update(favorites => [...favorites, conf]);
+  }
+  constructor(){
+    console.log(this.x());
+    this.x.set(3);
+     console.log(this.x());
+     this.x.update(x=>x+1);
+     console.log(this.x());
+
+
   }
 
   liker(conf: Conference): void {
     conf.nbLikes++;
   }
 
-  filtrer(): Conference[] {
-    const recherche = this.searchItem.trim().toLowerCase();
-    return this.confList.filter(
-      (conf) => conf.nbPlaces > 0 && conf.titre.toLowerCase().includes(recherche),
-    );
-  }
+filtrer(): Conference[] {
+  const recherche = this.searchItem.trim().toLowerCase();
+  return this.confList().filter(
+    (conf) => conf.nbPlaces > 0 && conf.titre.toLowerCase().includes(recherche),
+  );
+}
 }

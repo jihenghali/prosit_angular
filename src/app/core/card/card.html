@@ -1,0 +1,14 @@
+<div class="card" style="width: 18rem">
+  <img [src]="conf.imageUrl" class="card-img-top" alt="conf_image" />
+  <div class="card-body">
+    <h5 class="card-title">{{ conf.titre | uppercase }}</h5>
+    <p class="card-text">{{ conf.category }}</p>
+    <p>{{ conf.date | date: 'dd-mm-yyyy' }}</p>
+    <button type="button" class="btn btn-primary" (click)="favoriteRequested.emit()">
+      Ajouter aux favoris
+    </button>
+    <button type="button" class="btn btn-primary" (click)="likeRequested.emit()">
+      J’aime ({{ conf.nbLikes }})
+    </button>
+  </div>
+</div>
